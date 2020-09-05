@@ -26,6 +26,8 @@ foreach ($municipios as $de) {
         $linha = $matches[1];
         preg_match_all($numero, $get, $matches);
         $numero = array();
+        preg_match_all($infoline, $get, $matches);
+        $infoline = $matches[2];
 
         foreach ($matches[1] as $key => $value) {
             if ($key % 2 == 0)
@@ -44,11 +46,15 @@ foreach ($municipios as $de) {
             $linha[$key] = str_replace('<br>', '', $linha[$key]);
             $linha[$key] = trim($linha[$key]);
         }
-        $matches2 = array();
 
-        preg_match_all($infoline, $get, $matches2);
-
-        var_dump($matches2[2]);
+        $uriline = array();        
+        foreach ($infoline as $key => $value) {
+            if ($key % 2 == 0)
+                continue;
+            $uriline[] = $value;
+        }
+        
+        var_dump($uriline);
 
         /*foreach ($preco as $key => $value) {
             $url2 = 'http://www.emtu.sp.gov.br/sistemas/linha/resultado1.htm?pag=origemdestino.htm&numlinha='.intval($numero[$key]).'&tipo=&rua=';
