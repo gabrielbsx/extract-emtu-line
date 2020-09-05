@@ -18,7 +18,6 @@ foreach ($municipios as $de) {
         $linha = '/<span style=\"font\-size: 10px\">(.*?)<\/span>/';
         $numero = "/AbreJanelaAvaliacaoLinhas\(\'(.*?)\',\'\/sistemas\/linha/";
         $infoline = "/AbreJanelaAvaliacaoLinhas\(\'((.*?)+','(.*?))\'\)\"/";
-        $servico = "/<tr><td class=\"destaque2\">Serviço:<\/td>(.*?)<td colspan=\"2\">(.*?)<\/td><\/tr>/";
 
         preg_match_all($preco, $get, $matches);
         $preco = $matches[1];
@@ -52,22 +51,20 @@ foreach ($municipios as $de) {
             if ($key % 2 == 0)
                 continue;
             $uriline[] = $value;
-        }
-        
-        var_dump($uriline);
-        exit();
-        
+        }        
 
-        /*foreach ($preco as $key => $value) {
-            $url2 = 'http://www.emtu.sp.gov.br/sistemas/linha/resultado1.htm?pag=origemdestino.htm&numlinha='.intval($numero[$key]).'&tipo=&rua=';
-            $get2 = file_get_contents($url2);
-            $servico = '/<td class=\"destaque2\">Serviço:<\/td>(.*?)<td colspan=\"2\">(.*?)<\/td>/';
+        foreach ($preco as $key => $value) {
+            $url2 = 'http://www.emtu.sp.gov.br' . $uriline[$key];
+            $get2 = utf8_encode(file_get_contents($url2));
+            $matches = array();
+            $servico = "/<tr><td class=\"destaque2\">Serviço:<\/td>((.*?)+<td colspan=\"2\"\>(.*?))<\/td><\/tr>/";
             preg_match_all($servico, $get2, $matches);
             $servico = array();
-            var_dump($matches);
+            $servico = trim($matches[3][0]);
+            var_dump($servico);
             break(3);
             //echo $de . ';' . $ate['municipio'] . ';' . $numero[$key] . ';' . $preco[$key] . ';' . $linha[$key] . ';' . $empresa[$key] . ";\n";
-        }*/
+        }
         if(false)
             break (2);
         $i++;
