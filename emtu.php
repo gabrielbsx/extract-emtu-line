@@ -56,14 +56,24 @@ foreach ($municipios as $de) {
         foreach ($preco as $key => $value) {
             $url2 = 'http://www.emtu.sp.gov.br' . $uriline[$key];
             $get2 = utf8_encode(file_get_contents($url2));
+
             $matches = array();
             $servico = "/<tr><td class=\"destaque2\">Serviço:<\/td>((.*?)+<td colspan=\"2\"\>(.*?))<\/td><\/tr>/";
             preg_match_all($servico, $get2, $matches);
-            $servico = array();
             $servico = trim($matches[3][0]);
             $servico = str_replace(' ', '', $servico);
             $servico = str_replace('(', ' (', $servico);
-            var_dump($servico);
+
+            $percurso = "/<BR><b>TEMPO DE PERCURSO<\/b>:(.*?)<BR>/";
+            preg_match_all($percurso, $get2, $matches);
+            $percurso = $matches[1];
+            $ida = trim($percurso[0]);
+            $volta = trim($percurso[1]);
+            $ida = preg_replace('/\s+/', ' ', $ida);
+            $volta = preg_replace('/\s+/', ' ', $volta);
+            var_dump($ida);
+            var_dump($volta);
+            break(3);
 
             //echo $de . ';' . $ate['municipio'] . ';' . $numero[$key] . ';' . $preco[$key] . ';' . $linha[$key] . ';' . $empresa[$key] . ";\n";
         }
