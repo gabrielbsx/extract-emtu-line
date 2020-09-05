@@ -1,7 +1,7 @@
 <?php
 $i = 0;
 $municipios = ['Alambari', 'Aluminio', 'Americana', 'Aparecida', 'Aracariguama', 'Aracoiaba da Serra', 'Arapei', 'Areias', 'Artur Nogueira', 'Aruja', 'Bananal', 'Barueri', 'Bertioga', 'Biritiba-mirim', 'Boituva', 'Cacapava', 'Cachoeira Paulista', 'Caieiras', 'Cajamar', 'Campinas', 'Campos do Jordao', 'Canas', 'Capela do Alto', 'Caraguatatuba', 'Carapicuiba', 'Cerquilho', 'Cesario Lange', 'Cosmopolis', 'Cotia', 'Cruzeiro', 'Cubatao', 'Cunha', 'Diadema', 'Embu das Artes', 'Embu-guacu', 'Engenheiro Coelho', 'Ferraz de Vasconcelos', 'Francisco Morato', 'Franco da Rocha', 'Guararema', 'Guaratingueta', 'Guaruja', 'Guarulhos', 'Holambra', 'Hortolandia', 'Ibiuna', 'Igarata', 'Ilhabela', 'Indaiatuba', 'Ipero', 'Itanhaem', 'Itapecerica da Serra', 'Itapetininga', 'Itapevi', 'Itaquaquecetuba', 'Itatiba', 'Itu', 'Jacarei', 'Jaguariuna', 'Jambeiro', 'Jandira', 'Jumirim', 'Juquitiba', 'Lagoinha', 'Lavrinhas', 'Lorena', 'Mairinque', 'Mairipora', 'Maua', 'Mogi das Cruzes', 'Mongagua', 'Monte Mor', 'Monteiro Lobato', 'Morungaba', 'Natividade da Serra', 'Nova Odessa', 'Osasco', 'Paraibuna', 'Paulinia', 'Pedreira', 'Peruibe', 'Piedade', 'Pilar do Sul', 'Pindamonhangaba', 'Piquete', 'Pirapora do Bom Jesus', 'Poa', 'Porto Feliz', 'Potim', 'Praia Grande', 'Queluz', 'Redencao da Serra', 'Ribeirao Pires', 'Rio Grande da Serra', 'Roseira', 'Salesopolis', 'Salto', 'Salto de Pirapora', 'Santa Barbara do Oeste', 'Santa Branca', 'Santa Isabel', 'Santana de Parnaiba', 'Santo Andre', 'Santo Antonio de Posse', 'Santo Antonio do Pinhal', 'Santos', 'Sao Bento do Sapucai', 'Sao Bernardo do Campo', 'Sao Caetano do Sul', 'Sao Jose do Barreiro', 'Sao Jose dos Campos', 'Sao Lourenco da Serra', 'Sao Luiz do Paraitinga', 'Sao Miguel Arcanjo', 'Sao Paulo', 'Sao Roque', 'Sao Sebastiao', 'Sao Vicente', 'Sarapui', 'Silveiras', 'Sorocaba', 'Sumare', 'Suzano', 'Taboao da Serra', 'Tapirai', 'Tatui', 'Taubate', 'Tiete', 'Tremembe', 'Ubatuba', 'Valinhos', 'Vargem Grande Paulista', 'Vinhedo', 'Votorantim'];
-echo 'de;para;numero;preco;linha;empresa;' . "\n";
+echo 'de;para;numero;linha;empresa;servico;tempo_de_percurso_ida;tempo_de_percurso_volta;horarios_ida;horarios_volta;quantidade_partidas_ida;quantidade_partida_volta;data_base_de_dados' . "\n";
 foreach ($municipios as $de) {
     $para = json_decode(file_get_contents('http://www.emtu.sp.gov.br/emtu/home/home.asp?a=queroIrPara&cidadede=' . urlencode($de)), true);
     foreach ($para as $ate) {
@@ -55,7 +55,6 @@ foreach ($municipios as $de) {
 
         foreach ($preco as $key => $value) {
             $url2 = 'http://www.emtu.sp.gov.br' . $uriline[$key];
-            echo $uriline[$key];
             $get2 = utf8_encode(file_get_contents($url2));
 
             $matches = array();
@@ -78,13 +77,13 @@ foreach ($municipios as $de) {
             $diautil = "/<span class=\'destaque2\'><br><b>Dias Úteis<\/b><\/span>(.*?)<span class=\'destaque2\'>/";
             preg_match_all($diautil, $get2, $matches);
             
-            $idadia = $matches[1][0];
+            $idadia = $matches[1][0] ?? '';
             $idadia = str_replace('<br>', '', $idadia);
             $idadia = str_replace('<BR>', '', $idadia);
             $idadia = str_replace('&nbsp;', ' ', $idadia);
             $idadia = trim(preg_replace('/\s+/', ' ', $idadia));
-
-            $voltadia = $matches[1][1];
+            
+            $voltadia = $matches[1][1] ?? '';
             $voltadia = str_replace('<br>', '', $voltadia);
             $voltadia = str_replace('<BR>', '', $voltadia);
             $voltadia = str_replace('&nbsp;', ' ', $voltadia);
@@ -103,10 +102,7 @@ foreach ($municipios as $de) {
             preg_match_all('/Data da base de dados: (.*?)&nbsp;/', $get2, $matches);
             $basedata = $matches[1][0];
 
-            echo $de . ';' . $ate['municipio'] . ';' . $numero[$key] . ';' . $preco[$key] . ';' . $linha[$key] . ';' . $empresa[$key] . ";\n";
+            echo $de . ';' . $ate['municipio'] . ';' . $numero[$key] . ';' . $linha[$key] . ';' . $empresa[$key] . ';' . $servico . ';' . $ida . ';' . $volta . ';' . $idadia . ';' . $voltadia . ';' . $qntida . ';' . $qntvolta . ';' . $basedata . ";\n";
         }
-        if($i > 2)
-            break (2);
-        $i++;
     }
 }
