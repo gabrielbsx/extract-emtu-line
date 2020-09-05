@@ -61,8 +61,10 @@ foreach ($municipios as $de) {
             preg_match_all($servico, $get2, $matches);
             $servico = array();
             $servico = trim($matches[3][0]);
+            $servico = str_replace(' ', '', $servico);
+            $servico = str_replace('(', ' (', $servico);
             var_dump($servico);
-            break(3);
+
             //echo $de . ';' . $ate['municipio'] . ';' . $numero[$key] . ';' . $preco[$key] . ';' . $linha[$key] . ';' . $empresa[$key] . ";\n";
         }
         if(false)
