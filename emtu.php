@@ -77,18 +77,33 @@ foreach ($municipios as $de) {
             
             $diautil = "/<span class=\'destaque2\'><br><b>Dias Úteis<\/b><\/span>(.*?)<span class=\'destaque2\'>/";
             preg_match_all($diautil, $get2, $matches);
+            
             $idadia = $matches[1][0];
             $idadia = str_replace('<br>', '', $idadia);
             $idadia = str_replace('<BR>', '', $idadia);
             $idadia = str_replace('&nbsp;', ' ', $idadia);
-            $idadia = preg_replace('/\s+/', ' ', $idadia);
+            $idadia = trim(preg_replace('/\s+/', ' ', $idadia));
+
             $voltadia = $matches[1][1];
             $voltadia = str_replace('<br>', '', $voltadia);
             $voltadia = str_replace('<BR>', '', $voltadia);
             $voltadia = str_replace('&nbsp;', ' ', $voltadia);
-            $voltadia = preg_replace('/\s+/', ' ', $voltadia);
+            $voltadia = trim(preg_replace('/\s+/', ' ', $voltadia));
 
-            //echo $de . ';' . $ate['municipio'] . ';' . $numero[$key] . ';' . $preco[$key] . ';' . $linha[$key] . ';' . $empresa[$key] . ";\n";
+            preg_match_all('/([0-9][0-9]:[0-9][0-9])/', $voltadia, $matches);
+            $res = array_filter($matches);
+            $qntvolta = $res[1] ?? array();
+            $qntvolta = count($qntvolta);
+            
+            preg_match_all('/([0-9][0-9]:[0-9][0-9])/', $idadia, $matches);
+            $res = array_filter($matches);
+            $qntida = $res[1] ?? array();
+            $qntida = count($qntida);
+
+            preg_match_all('/Data da base de dados: (.*?)&nbsp;/', $get2, $matches);
+            $basedata = $matches[1][0];
+
+            echo $de . ';' . $ate['municipio'] . ';' . $numero[$key] . ';' . $preco[$key] . ';' . $linha[$key] . ';' . $empresa[$key] . ";\n";
         }
         if($i > 2)
             break (2);
