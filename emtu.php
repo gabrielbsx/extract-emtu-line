@@ -55,6 +55,7 @@ foreach ($municipios as $de) {
 
         foreach ($preco as $key => $value) {
             $url2 = 'http://www.emtu.sp.gov.br' . $uriline[$key];
+            echo $uriline[$key];
             $get2 = utf8_encode(file_get_contents($url2));
 
             $matches = array();
@@ -64,20 +65,32 @@ foreach ($municipios as $de) {
             $servico = str_replace(' ', '', $servico);
             $servico = str_replace('(', ' (', $servico);
 
-            $percurso = "/<BR><b>TEMPO DE PERCURSO<\/b>:(.*?)<BR>/";
-            preg_match_all($percurso, $get2, $matches);
-            $percurso = $matches[1];
-            $ida = trim($percurso[0]);
-            $volta = trim($percurso[1]);
-            $ida = preg_replace('/\s+/', ' ', $ida);
-            $volta = preg_replace('/\s+/', ' ', $volta);
-            var_dump($ida);
-            var_dump($volta);
-            break(3);
+            $ida = "/<td  id=\"horarioIda\" style=\"display=\'none\'\" >   <BR><b>TEMPO DE PERCURSO<\/b>:(.*?)<BR>/";
+            preg_match_all($ida, $get2, $matches);
+            $ida = $matches[1][0] ?? '';
+            $ida = trim(preg_replace('/\s+/', ' ', $ida));
+            
+            $volta = "/<td   id=\"horarioVolta\" style=\"display=\'none\'\" > <BR><b>TEMPO DE PERCURSO<\/b>:(.*?)<BR>/";
+            preg_match_all($volta, $get2, $matches);
+            $volta = $matches[1][0] ?? '';
+            $volta = trim(preg_replace('/\s+/', ' ', $volta));
+            
+            $diautil = "/<span class=\'destaque2\'><br><b>Dias Úteis<\/b><\/span>(.*?)<span class=\'destaque2\'>/";
+            preg_match_all($diautil, $get2, $matches);
+            $idadia = $matches[1][0];
+            $idadia = str_replace('<br>', '', $idadia);
+            $idadia = str_replace('<BR>', '', $idadia);
+            $idadia = str_replace('&nbsp;', ' ', $idadia);
+            $idadia = preg_replace('/\s+/', ' ', $idadia);
+            $voltadia = $matches[1][1];
+            $voltadia = str_replace('<br>', '', $voltadia);
+            $voltadia = str_replace('<BR>', '', $voltadia);
+            $voltadia = str_replace('&nbsp;', ' ', $voltadia);
+            $voltadia = preg_replace('/\s+/', ' ', $voltadia);
 
             //echo $de . ';' . $ate['municipio'] . ';' . $numero[$key] . ';' . $preco[$key] . ';' . $linha[$key] . ';' . $empresa[$key] . ";\n";
         }
-        if(false)
+        if($i > 2)
             break (2);
         $i++;
     }
