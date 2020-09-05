@@ -17,7 +17,7 @@ foreach ($municipios as $de) {
         $empresa = '/<td class=\"texto\">(.*?)<\/td>/';
         $linha = '/<span style=\"font\-size: 10px\">(.*?)<\/span>/';
         $numero = "/AbreJanelaAvaliacaoLinhas\(\'(.*?)\',\'\/sistemas\/linha/";
-        $infoline = "/AbreJanelaAvaliacaoLinhas\(\'([0-9]+','(.*?))\'\)\"/";
+        $infoline = "/AbreJanelaAvaliacaoLinhas\(\'((.*?)+','(.*?))\'\)\"/";
         $servico = "/<tr><td class=\"destaque2\">Serviço:<\/td>(.*?)<td colspan=\"2\">(.*?)<\/td><\/tr>/";
 
         preg_match_all($preco, $get, $matches);
@@ -26,8 +26,6 @@ foreach ($municipios as $de) {
         $linha = $matches[1];
         preg_match_all($numero, $get, $matches);
         $numero = array();
-        preg_match_all($infoline, $get, $matches);
-        $infoline = $matches[2];
 
         foreach ($matches[1] as $key => $value) {
             if ($key % 2 == 0)
@@ -47,6 +45,8 @@ foreach ($municipios as $de) {
             $linha[$key] = trim($linha[$key]);
         }
 
+        preg_match_all($infoline, $get, $matches);
+        $infoline = $matches[3];
         $uriline = array();        
         foreach ($infoline as $key => $value) {
             if ($key % 2 == 0)
@@ -55,6 +55,8 @@ foreach ($municipios as $de) {
         }
         
         var_dump($uriline);
+        exit();
+        
 
         /*foreach ($preco as $key => $value) {
             $url2 = 'http://www.emtu.sp.gov.br/sistemas/linha/resultado1.htm?pag=origemdestino.htm&numlinha='.intval($numero[$key]).'&tipo=&rua=';
